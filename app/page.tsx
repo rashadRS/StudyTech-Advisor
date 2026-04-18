@@ -63,7 +63,7 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">FAQ</h2>
+        <h2 className="text-2xl font-semibold mb-4">{t(lang, 'faq')}</h2>
         <FAQAccordion items={faqs.map((f) => ({ q: lang === 'ar' ? f.arQ : f.q, a: lang === 'ar' ? f.arA : f.a }))} />
       </section>
     </div>

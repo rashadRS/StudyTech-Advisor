@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { recommendDevices } from '@/lib/recommend';
 import { QuizAnswers } from '@/lib/types';
@@ -13,9 +13,17 @@ export default function QuizResultsPage() {
   const { lang } = useLanguage();
   const router = useRouter();
   const [saved, setSaved] = useState<string[]>([]);
+  const [answers, setAnswers] = useState<QuizAnswers | null>(null);
+  const [ready, setReady] = useState(false);
 
-  const answers = storage.get<QuizAnswers | null>('studytech_latest_quiz', null);
+  useEffect(() => {
+    setAnswers(storage.get<QuizAnswers | null>('studytech_latest_quiz', null));
+    setReady(true);
+  }, []);
+
   const results = useMemo(() => (answers ? recommendDevices(answers) : []), [answers]);
+
+  if (!ready) return <div className="card p-10 text-center animate-pulse">{lang === 'ar' ? 'جار التحميل...' : 'Loading...'}</div>;
 
   if (!answers) {
     return (

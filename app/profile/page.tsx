@@ -6,9 +6,14 @@ import { useLanguage } from '@/components/ui/providers';
 import { t } from '@/data/i18n';
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const { lang } = useLanguage();
-  useEffect(() => setUser(auth.currentUser()), []);
+
+  useEffect(() => {
+    setUser(auth.currentUser());
+  }, []);
+
+  if (user === undefined) return <div className="card p-8 animate-pulse">{lang === 'ar' ? 'جار التحميل...' : 'Loading...'}</div>;
 
   return (
     <div>

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { EmptyState } from '@/components/ui/common';
 import { QuizAnswers } from '@/lib/types';
 import { storage } from '@/lib/utils';
@@ -7,8 +8,14 @@ import { useLanguage } from '@/components/ui/providers';
 import { t } from '@/data/i18n';
 
 export default function QuizHistoryPage() {
-  const history = storage.get<QuizAnswers[]>('studytech_quiz_history', []);
+  const [history, setHistory] = useState<QuizAnswers[] | null>(null);
   const { lang } = useLanguage();
+
+  useEffect(() => {
+    setHistory(storage.get<QuizAnswers[]>('studytech_quiz_history', []));
+  }, []);
+
+  if (!history) return <div className="card p-10 text-center animate-pulse">{lang === 'ar' ? 'جار التحميل...' : 'Loading...'}</div>;
 
   return (
     <div>
